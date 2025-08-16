@@ -14,44 +14,59 @@
 
 /* Для добавления предсказания в список воспользуйся шаблоном forecast-item */
 
-const forecastButton = document.querySelector('.forecast-btn');
-const currentForecastTitle = document.querySelector('.current-forecast h1');
-const currentForecastProbability = document.querySelector('.current-forecast p');
 
-function generateRandomNumber() {
-    return Math.floor(Math.random() * 5) + 1; 
+const forecastBtn = document.querySelector('.forecast-btn');
+const currentForecast = document.querySelector('.current-forecast');
+const forecastsContainer = document.querySelector('.forecasts');
+const forecastTemplate = document.getElementById('forecast-item');
+
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getPrediction(number) {
-    let prediction;
-    switch (number) {
-        case 1:
-            prediction = "Сегодня будет удачный день!";
-            break;
-        case 2:
-            prediction = "Вам предстоит важное решение.";
-            break;
-        case 3:
-            prediction = "Ожидайте приятный сюрприз.";
-            break;
-        case 4:
-            prediction = "Ваши старания будут вознаграждены.";
-            break;
-        case 5:
-            prediction = "Будьте внимательны к своим близким.";
-            break;
-        default:
-            prediction = "Нет предсказания.";
-    }
-    return prediction;
-}
 
-function generateForecast() {
-    const randomNumber = generateRandomNumber(); 
-    const prediction = getPrediction(randomNumber); 
+const predictions = [
+  {
+    text: 'Удача на вашей стороне!',
+    probability: getRandomInt(50, 100) 
+  },
+  {
+    text: 'Вас ждут небольшие трудности.',
+    probability: getRandomInt(20, 50) 
+  },
+  {
+    text: 'Сегодня не лучший день для важных решений.',
+    probability: getRandomInt(0, 20) 
+  },
+  {
+    text: 'Вас ожидает приятное событие.',
+    probability: getRandomInt(60, 100)
+  },
+  {
+    text: 'Будьте осторожны сегодня.',
+    probability: getRandomInt(10, 40)
+  }
+];
 
-    currentForecastTitle.textContent = prediction;
-    currentForecastProbability.textContent = `Сгенерированное число: ${randomNumber}`;
-}
 
-forecastButton.addEventListener('click', generateForecast);
+forecastBtn.addEventListener('click', () => {
+  
+ 
+  const index = getRandomInt(0, predictions.length -1);
+  
+  const prediction = predictions[index];
+  
+
+  currentForecast.querySelector('h1').textContent = prediction.text;
+  currentForecast.querySelector('p').textContent = `Вероятность сбыться: ${prediction.probability}%`;
+  
+  
+  const forecastClone = forecastTemplate.content.cloneNode(true);
+  
+
+  forecastClone.querySelector('h3').textContent = prediction.text;
+  
+ 
+  forecastsContainer.insertBefore(forecastClone, forecastsContainer.firstChild);
+});
