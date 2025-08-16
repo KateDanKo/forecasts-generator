@@ -18,39 +18,49 @@ const forecastButton = document.querySelector('.forecast-btn');
 const currentForecastTitle = document.querySelector('.current-forecast h1');
 const currentForecastProbability = document.querySelector('.current-forecast p');
 
-function generateRandomNumber() {
-    return Math.floor(Math.random() * 5) + 1; 
+function generateRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function getPrediction(number) {
-    let prediction;
     switch (number) {
         case 1:
-            prediction = "Сегодня будет удачный день!";
-            break;
+            return "Сегодня будет удачный день!";
         case 2:
-            prediction = "Вам предстоит важное решение.";
-            break;
+            return "Вам предстоит важное решение.";
         case 3:
-            prediction = "Ожидайте приятный сюрприз.";
-            break;
+            return "Ожидайте приятный сюрприз.";
         case 4:
-            prediction = "Ваши старания будут вознаграждены.";
-            break;
+            return "Ваши старания будут вознаграждены.";
         case 5:
-            prediction = "Будьте внимательны к своим близким.";
-            break;
+            return "Будьте внимательны к своим близким.";
         default:
-            prediction = "Нет предсказания.";
+            return "Нет предсказания.";
     }
-    return prediction;
+}
+
+// Функция для клонирования шаблона и заполнения данными
+function createForecastItem(prediction, probability) {
+    const template = document.getElementById('forecast-item');
+    const clone = template.content.cloneNode(true);
+    clone.querySelector('h3').textContent = prediction;
+    clone.querySelector('p').textContent = `Вероятность: ${probability}%`;
+    return clone;
 }
 
 function generateForecast() {
-    const randomNumber = generateRandomNumber(); 
-    const prediction = getPrediction(randomNumber); 
-    currentForecastTitle.textContent = prediction;
-    currentForecastProbability.textContent = `Сгенерированное число: ${randomNumber}`;
+    const predictionNumber = generateRandomNumber(1, 5);
+    const probability = generateRandomNumber(0, 100);
+    const predictionText = getPrediction(predictionNumber);
+    
+    currentForecastTitle.textContent = predictionText;
+    currentForecastProbability.textContent = `Вероятность: ${probability}%`;
+    
+    const forecastElement = createForecastItem(predictionText, probability);
+    
+    const forecastsContainer = document.querySelector('.forecasts');
+    
+    forecastsContainer.appendChild(forecastElement);
 }
 
 forecastButton.addEventListener('click', generateForecast);
